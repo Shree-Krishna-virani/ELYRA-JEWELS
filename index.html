@@ -1,1 +1,72 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Illustration</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #f3f3f3, #c0eaff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      border: 3px solid #333;
+      background: #fff;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="myCanvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let x = 200;
+    let y = 200;
+    let dx = 2;
+    let dy = 2;
+    let radius = 30;
+
+    function drawCircle() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw face
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#FFB703";
+      ctx.fill();
+      ctx.strokeStyle = "#fb8500";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.closePath();
+
+      // Draw eyes
+      ctx.beginPath();
+      ctx.arc(x - 10, y - 10, 4, 0, Math.PI * 2);
+      ctx.arc(x + 10, y - 10, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "#000";
+      ctx.fill();
+      ctx.closePath();
+
+      // Bounce logic
+      if (x + dx > canvas.width - radius || x + dx < radius) dx = -dx;
+      if (y + dy > canvas.height - radius || y + dy < radius) dy = -dy;
+
+      x += dx;
+      y += dy;
+
+      requestAnimationFrame(drawCircle);
+    }
+
+    drawCircle();
+  </script>
+
+</body>
+</html>
