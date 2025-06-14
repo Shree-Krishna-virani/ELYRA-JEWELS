@@ -2,36 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bouncing Twitch Emote</title>
+  <title>Animated Character</title>
   <style>
     body {
-      margin: 0;
-      height: 100vh;
       background: #111;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    .emote {
-      width: 120px;
-      animation: bounce 1s infinite ease-in-out;
-      transform-origin: bottom center;
+    .character {
+      position: relative;
+      width: 200px;
+      animation: float 3s ease-in-out infinite;
     }
 
-    @keyframes bounce {
-      0%   { transform: scale(1) translateY(0); }
-      30%  { transform: scale(1.1, 0.9) translateY(0); }
-      50%  { transform: scale(0.95, 1.1) translateY(-60px); }
-      70%  { transform: scale(1.05, 0.95) translateY(0); }
-      100% { transform: scale(1) translateY(0); }
+    .head {
+      width: 100%;
+      position: relative;
+    }
+
+    .eyes {
+      position: absolute;
+      top: 70px;
+      left: 60px;
+      display: flex;
+      gap: 40px;
+    }
+
+    .eye {
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      animation: blink 4s infinite;
+    }
+
+    .pupil {
+      width: 10px;
+      height: 10px;
+      background: black;
+      border-radius: 50%;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+    }
+
+    @keyframes blink {
+      0%, 90%, 100% { height: 20px; }
+      92% { height: 3px; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
   </style>
 </head>
 <body>
 
-  <!-- Replace this src with your emote image -->
-  <img class="emote" src="https://static-cdn.jtvnw.net/emoticons/v2/301751495/static/light/3.0" alt="Twitch Emote">
+  <div class="character">
+    <!-- Head image -->
+    <img src="https://i.ibb.co/FzLwMns/cartoon-head.png" alt="Character Head" class="head">
+
+    <!-- Animated Eyes -->
+    <div class="eyes">
+      <div class="eye"><div class="pupil"></div></div>
+      <div class="eye"><div class="pupil"></div></div>
+    </div>
+  </div>
 
 </body>
 </html>
