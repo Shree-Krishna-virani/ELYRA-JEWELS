@@ -1,72 +1,37 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Canvas Illustration</title>
+  <title>Bouncing Twitch Emote</title>
   <style>
     body {
       margin: 0;
-      background: linear-gradient(to right, #f3f3f3, #c0eaff);
+      height: 100vh;
+      background: #111;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
-    canvas {
-      border: 3px solid #333;
-      background: #fff;
-      border-radius: 12px;
+
+    .emote {
+      width: 120px;
+      animation: bounce 1s infinite ease-in-out;
+      transform-origin: bottom center;
+    }
+
+    @keyframes bounce {
+      0%   { transform: scale(1) translateY(0); }
+      30%  { transform: scale(1.1, 0.9) translateY(0); }
+      50%  { transform: scale(0.95, 1.1) translateY(-60px); }
+      70%  { transform: scale(1.05, 0.95) translateY(0); }
+      100% { transform: scale(1) translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <canvas id="myCanvas" width="400" height="400"></canvas>
-
-  <script>
-    const canvas = document.getElementById("myCanvas");
-    const ctx = canvas.getContext("2d");
-
-    let x = 200;
-    let y = 200;
-    let dx = 2;
-    let dy = 2;
-    let radius = 30;
-
-    function drawCircle() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw face
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = "#FFB703";
-      ctx.fill();
-      ctx.strokeStyle = "#fb8500";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-      ctx.closePath();
-
-      // Draw eyes
-      ctx.beginPath();
-      ctx.arc(x - 10, y - 10, 4, 0, Math.PI * 2);
-      ctx.arc(x + 10, y - 10, 4, 0, Math.PI * 2);
-      ctx.fillStyle = "#000";
-      ctx.fill();
-      ctx.closePath();
-
-      // Bounce logic
-      if (x + dx > canvas.width - radius || x + dx < radius) dx = -dx;
-      if (y + dy > canvas.height - radius || y + dy < radius) dy = -dy;
-
-      x += dx;
-      y += dy;
-
-      requestAnimationFrame(drawCircle);
-    }
-
-    drawCircle();
-  </script>
+  <!-- Replace this src with your emote image -->
+  <img class="emote" src="https://static-cdn.jtvnw.net/emoticons/v2/301751495/static/light/3.0" alt="Twitch Emote">
 
 </body>
 </html>
