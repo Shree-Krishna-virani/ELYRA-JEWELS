@@ -82,28 +82,6 @@ export default function HomePage() {
         </motion.button>
       </section>
 
-      {/* Anime Art Showcase */}
-      <section className="relative z-10 px-6 py-20 bg-black/60 text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-3xl md:text-4xl font-semibold text-rose-400 mb-10 animate-slide-in"
-        >
-          Featured Anime Art
-        </motion.h2>
-        <div className="flex justify-center">
-          <motion.img
-            src="/A_digital_illustration_in_chibi_anime_style_featur.png"
-            alt="Chibi Anime Art"
-            className="rounded-xl shadow-lg w-full max-w-md"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          />
-        </div>
-      </section>
-
       {/* About Section */}
       <section className="relative z-10 px-6 py-20 text-center max-w-3xl mx-auto bg-black/70">
         <motion.h2
@@ -156,6 +134,21 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Featured Chibi Art Section */}
+      <section className="relative z-10 px-6 py-20 bg-black/80 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-4xl font-semibold text-rose-400 mb-10 animate-slide-in"
+        >
+          Featured Anime Art
+        </motion.h2>
+        <div className="flex justify-center items-center">
+          <img src="/chibi-art.png" alt="Chibi Art" className="w-72 md:w-96 rounded-2xl shadow-lg" />
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section className="relative z-10 px-6 py-20 text-center bg-black/70">
         <motion.h2
@@ -192,6 +185,10 @@ if (typeof window !== "undefined") {
     const canvas = document.getElementById("stars");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      console.error("Canvas context not supported or failed to initialize.");
+      return;
+    }
     let stars = [];
     for (let i = 0; i < 100; i++) {
       stars.push({
