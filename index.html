@@ -1,216 +1,219 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Character Animation</title>
-    <!-- Tailwind CSS for basic styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden; /* Hide scrollbars */
-            font-family: 'Inter', sans-serif; /* Use Inter font */
-            background-color: #1a202c; /* Dark background for contrast */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #e2e8f0; /* Light text color */
-        }
-        canvas {
-            display: block; /* Remove extra space below canvas */
-            width: 100%;
-            height: 100%;
-            border-radius: 0.75rem; /* Rounded corners */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-        }
-        #info {
-            position: absolute;
-            top: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.9rem;
-            color: white;
-            z-index: 10;
-        }
-    </style>
-</head>
-<body>
-    <div id="info">Use mouse to orbit around the character</div>
-    <div id="container" class="w-full h-screen flex justify-center items-center p-4">
-        <!-- The three.js canvas will be appended here by JavaScript -->
-    </div>
+import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { FaPaintBrush, FaPalette, FaLaptopCode, FaEnvelope } from "react-icons/fa";
 
-    <!-- three.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- OrbitControls for camera interaction -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.min.js"></script>
+export default function HomePage() {
+  useEffect(() => {
+    document.title = "Coffeecup Design Studio";
+  }, []);
 
-    <script type="module">
-        // Import necessary three.js components if using module type.
-        // For CDN usage, these are typically global, but for clarity, defining them
-        // ensures the IDE recognizes them.
-        const THREE = window.THREE;
-        const OrbitControls = window.OrbitControls;
+  return (
+    <main className="min-h-screen bg-black text-white overflow-x-hidden font-sans relative">
+      {/* Cinematic Letterbox Bars */}
+      <div className="fixed top-0 left-0 w-full h-10 bg-black z-30"></div>
+      <div className="fixed bottom-0 left-0 w-full h-10 bg-black z-30"></div>
 
-        let scene, camera, renderer, character, controls;
-        let clock = new THREE.Clock(); // For consistent animation timing
+      {/* Star Particles */}
+      <div className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none">
+        <canvas id="stars" className="w-full h-full" />
+      </div>
 
-        /**
-         * Initializes the 3D scene, camera, renderer, and character.
-         */
-        function init() {
-            // 1. Scene setup
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x2d3748); // Slightly lighter dark background
+      {/* Background Gradient and Parallax Image */}
+      <div className="fixed top-0 left-0 w-full h-full z-0 bg-gradient-to-b from-blue-900 via-indigo-900 to-black animate-gradient-move">
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/background.jpg')] bg-cover bg-center opacity-50 mix-blend-screen parallax" />
+      </div>
 
-            // 2. Camera setup (PerspectiveCamera for 3D realism)
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 5); // Position the camera to view the character
+      {/* Intro Logo Reveal Animation */}
+      <div className="fixed inset-0 z-40 pointer-events-none flex items-center justify-center bg-black">
+        <motion.img
+          src="/logo.png"
+          alt="Coffeecup Logo"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1.2, opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 2 }}
+          className="w-32 h-32 object-contain"
+        />
+      </div>
 
-            // 3. Renderer setup
-            renderer = new THREE.WebGLRenderer({ antialias: true }); // Antialiasing for smoother edges
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            // Append the renderer's DOM element (canvas) to the container
-            document.getElementById('container').appendChild(renderer.domElement);
+      {/* Logo Text Fade Out */}
+      <div className="fixed inset-0 z-30 pointer-events-none animate-fadein backdrop-blur-sm bg-black/70 flex items-center justify-center text-center">
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 3, delay: 2 }}
+          className="text-white text-4xl md:text-6xl font-light tracking-widest"
+        >
+          A Coffeecup Design Production
+        </motion.div>
+      </div>
 
-            // 4. Lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); // Soft white light
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // Brighter light from a specific direction
-            directionalLight.position.set(5, 10, 7);
-            scene.add(directionalLight);
+      {/* Background Music */}
+      <audio autoPlay loop className="hidden">
+        <source src="/bg-music.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
 
-            // 5. Orbit Controls for interactive camera movement
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true; // Smooth camera movement
-            controls.dampingFactor = 0.05;
-            controls.screenSpacePanning = false; // Prevents panning beyond a certain point
-            controls.minDistance = 2; // Closest zoom
-            controls.maxDistance = 10; // Furthest zoom
-            controls.maxPolarAngle = Math.PI / 2; // Prevents camera from going below the ground
+      {/* Hero Section */}
+      <section className="relative z-10 flex flex-col items-center justify-center text-center h-screen bg-black/20 backdrop-blur-sm">
+        <motion.h1
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl animate-fade-in-down"
+        >
+          Coffeecup Design Studio
+        </motion.h1>
 
-            // 6. Create the character
-            character = createCharacter();
-            scene.add(character);
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="mt-4 text-lg md:text-xl text-gray-100 max-w-xl animate-fade-in"
+        >
+          Where creativity brews like fine coffee ☕ — blending emotion and atmosphere like your favorite anime skies.
+        </motion.p>
 
-            // 7. Handle window resizing
-            window.addEventListener('resize', onWindowResize);
-        }
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          className="mt-8 px-6 py-3 bg-rose-500 text-white rounded-full shadow-xl hover:bg-rose-600 transition animate-bounce"
+        >
+          Start Your Journey
+        </motion.button>
+      </section>
 
-        /**
-         * Creates a simple humanoid character using basic Three.js geometries.
-         * The character is assembled as a group of meshes.
-         * @returns {THREE.Group} The assembled character group.
-         */
-        function createCharacter() {
-            const characterGroup = new THREE.Group();
+      {/* Anime Art Showcase */}
+      <section className="relative z-10 px-6 py-20 bg-black/60 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-4xl font-semibold text-rose-400 mb-10 animate-slide-in"
+        >
+          Featured Anime Art
+        </motion.h2>
+        <div className="flex justify-center">
+          <motion.img
+            src="/A_digital_illustration_in_chibi_anime_style_featur.png"
+            alt="Chibi Anime Art"
+            className="rounded-xl shadow-lg w-full max-w-md"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+          />
+        </div>
+      </section>
 
-            // Body
-            const bodyGeometry = new THREE.BoxGeometry(1, 1.8, 0.5);
-            const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0x4a90e2, flatShading: true }); // Blue, non-glossy
-            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            characterGroup.add(body);
+      {/* About Section */}
+      <section className="relative z-10 px-6 py-20 text-center max-w-3xl mx-auto bg-black/70">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-4xl font-semibold text-rose-400 mb-6 animate-slide-in"
+        >
+          About Us
+        </motion.h2>
+        <p className="text-gray-300 text-lg leading-relaxed animate-fade-in">
+          At Coffeecup Design Studio, we infuse Japanese anime ambiance into every design. From magical skyscapes to characterful brands, our work feels alive and heartfelt. We believe visuals should inspire emotion — like the final shot of your favorite movie.
+        </p>
+      </section>
 
-            // Head
-            const headGeometry = new THREE.SphereGeometry(0.5, 32, 16);
-            const headMaterial = new THREE.MeshPhongMaterial({ color: 0xffe0bd, flatShading: true }); // Skin tone
-            const head = new THREE.Mesh(headGeometry, headMaterial);
-            head.position.y = 1.4; // Position on top of the body
-            characterGroup.add(head);
+      {/* Services Section */}
+      <section className="relative z-10 px-6 py-20 bg-black/60 text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-4xl font-semibold text-rose-400 mb-10 animate-slide-in"
+        >
+          Our Services
+        </motion.h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {[{
+            Icon: FaPaintBrush,
+            title: "Logo & Brand Design",
+            text: "Crafting memorable brand identities with heart."
+          }, {
+            Icon: FaPalette,
+            title: "Illustration & Art",
+            text: "Stylized artwork echoing cinematic animation vibes."
+          }, {
+            Icon: FaLaptopCode,
+            title: "Web & UI Design",
+            text: "Immersive interfaces that feel like an anime dream."
+          }].map(({ Icon, title, text }, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-white/10 rounded-xl shadow-md backdrop-blur-md animate-fade-in"
+            >
+              <Icon className="text-3xl text-rose-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">{title}</h3>
+              <p className="text-gray-200 text-sm">{text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-            // Left Arm
-            const armGeometry = new THREE.BoxGeometry(0.3, 1, 0.3);
-            const armMaterial = new THREE.MeshPhongMaterial({ color: 0x6b7280, flatShading: true }); // Grey
-            const leftArm = new THREE.Mesh(armGeometry, armMaterial);
-            leftArm.position.set(-0.7, 0.5, 0); // Position to the side of the body
-            leftArm.rotation.order = 'YXZ'; // Important for expected rotation behavior
-            characterGroup.add(leftArm);
+      {/* Contact Section */}
+      <section className="relative z-10 px-6 py-20 text-center bg-black/70">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-3xl md:text-4xl font-semibold text-rose-400 mb-6 animate-slide-in"
+        >
+          Contact Us
+        </motion.h2>
+        <p className="text-gray-300 text-lg mb-4 animate-fade-in">Got a vision in your head? Let’s draw it to life together.</p>
+        <div className="flex justify-center items-center gap-4 mt-6 animate-fade-in">
+          <FaEnvelope className="text-2xl text-rose-400" />
+          <a
+            href="mailto:hello@coffeecupstudio.com"
+            className="text-rose-300 text-lg hover:underline"
+          >
+            hello@coffeecupstudio.com
+          </a>
+        </div>
+      </section>
 
-            // Right Arm
-            const rightArm = new THREE.Mesh(armGeometry, armMaterial);
-            rightArm.position.set(0.7, 0.5, 0);
-            rightArm.rotation.order = 'YXZ';
-            characterGroup.add(rightArm);
+      {/* Footer */}
+      <footer className="relative z-10 bg-black text-center py-6 text-gray-400 text-sm animate-fade-in">
+        &copy; {new Date().getFullYear()} Coffeecup Design Studio — All rights reserved.
+      </footer>
+    </main>
+  );
+}
 
-            // Left Leg
-            const legGeometry = new THREE.BoxGeometry(0.4, 1.5, 0.4);
-            const legMaterial = new THREE.MeshPhongMaterial({ color: 0x2f3640, flatShading: true }); // Dark grey/black
-            const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
-            leftLeg.position.set(-0.3, -1.65, 0); // Position below the body
-            characterGroup.add(leftLeg);
-
-            // Right Leg
-            const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
-            rightLeg.position.set(0.3, -1.65, 0);
-            characterGroup.add(rightLeg);
-
-            // Store individual parts on the group for easier access during animation
-            characterGroup.body = body;
-            characterGroup.head = head;
-            characterGroup.leftArm = leftArm;
-            characterGroup.rightArm = rightArm;
-            characterGroup.leftLeg = leftLeg;
-            characterGroup.rightLeg = rightLeg;
-
-            // Adjust the whole group's position so its base is on the origin
-            characterGroup.position.y = 1;
-
-            return characterGroup;
-        }
-
-        /**
-         * Animation loop. This function is called repeatedly to update the scene.
-         */
-        function animate() {
-            requestAnimationFrame(animate); // Request the next frame
-
-            const delta = clock.getDelta(); // Time elapsed since last frame
-
-            // Character animation: Simple arm swing and body sway
-            if (character) {
-                const swingSpeed = 2; // How fast arms swing
-                const swaySpeed = 0.5; // How fast body sways
-                const maxArmSwing = Math.PI / 8; // Max arm swing angle
-                const maxBodySway = Math.PI / 32; // Max body sway angle
-
-                // Arm swing (alternating)
-                character.leftArm.rotation.x = Math.sin(clock.elapsedTime * swingSpeed) * maxArmSwing;
-                character.rightArm.rotation.x = Math.sin(clock.elapsedTime * swingSpeed + Math.PI) * maxArmSwing; // Opposite phase
-
-                // Body sway (slight side-to-side rotation)
-                character.rotation.y = Math.sin(clock.elapsedTime * swaySpeed) * maxBodySway;
-            }
-
-            controls.update(); // Update orbit controls (if damping is enabled)
-            renderer.render(scene, camera); // Render the scene
-        }
-
-        /**
-         * Handles window resizing to keep the scene responsive.
-         */
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // Start the application when the window loads
-        window.onload = function() {
-            try {
-                init();
-                animate();
-            } catch (error) {
-                console.error("Failed to initialize or run 3D scene:", error);
-                // Optionally display an error message to the user if the canvas fails to load
-                const container = document.getElementById('container');
-                container.innerHTML = '<p class="text-red-500">Error loading 3D scene. Please try again or check console for details.</p>';
-            }
-        };
-    </script>
-</body>
-</html>
+// Add canvas effect script for stars
+if (typeof window !== "undefined") {
+  window.onload = () => {
+    const canvas = document.getElementById("stars");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.5,
+        d: Math.random() * 50
+      });
+    }
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < stars.length; i++) {
+        let s = stars[i];
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2, false);
+        ctx.fillStyle = "white";
+        ctx.fill();
+      }
+      requestAnimationFrame(animate);
+    };
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    animate();
+  };
+}
