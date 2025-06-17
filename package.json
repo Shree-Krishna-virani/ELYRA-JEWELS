@@ -2,7 +2,8 @@
   "name": "coffeecup-site",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://package.json.github.io/coffeecup-site",
+  "homepage": "https://Shree-Krishna-virani.github.io/coffeecup-site"
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
