@@ -11,7 +11,7 @@ export default function SamuraiQuest() {
         {/* Sidebar */}
         <div className="col-span-1 flex flex-col items-center space-y-6">
           <div className="bg-white/10 rounded-full p-3">
-            <img src="https://i.pinimg.com/736x/d1/16/ff/d116ff2505c477ff618cf423c3fdaac2.jpg" alt="Logo" className="h-8 w-8 rounded-full" />
+            <img src="/logo.jpg" alt="Logo" className="h-8 w-8 rounded-full" />
           </div>
           <div className="flex flex-col space-y-4">
             <Button variant="ghost" size="icon" className="bg-white/10">
@@ -26,7 +26,7 @@ export default function SamuraiQuest() {
         {/* Main Section */}
         <div className="col-span-2 relative rounded-3xl overflow-hidden shadow-xl">
           <img
-            src="https://i.pinimg.com/736x/42/8c/4e/428c4e302c0f0b6d2e85e39889f25446.jpg"
+            src="/samurai-hero.jpg"
             alt="Samurai"
             className="w-full h-full object-cover absolute inset-0 opacity-70"
           />
@@ -41,7 +41,10 @@ export default function SamuraiQuest() {
 
         {/* Right Panel */}
         <div className="col-span-1 space-y-6">
-          <Card className="bg-cover bg-center rounded-2xl p-4" style={{ backgroundImage: "url('https://i.pinimg.com/736x/42/c2/58/42c258b0a76e4989d3e56c8b464dd620.jpg')" }}>
+          <Card
+            className="bg-cover bg-center rounded-2xl p-4"
+            style={{ backgroundImage: "url('/panel-bg.jpg')" }}
+          >
             <div className="flex justify-between items-center mb-4">
               <span>Hi, Eva</span>
               <span className="text-sm bg-yellow-500 text-black px-2 py-1 rounded">30% Off</span>
@@ -53,13 +56,13 @@ export default function SamuraiQuest() {
               <p className="text-xs text-gray-300">September 10, 2024</p>
             </div>
             <div className="flex space-x-2 mt-3">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" className="h-5" alt="Instagram" />
-              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Twitch_logo_2019.svg" className="h-5" alt="Twitch" />
+              <img src="/ig.svg" className="h-5" alt="Instagram" />
+              <img src="/tw.svg" className="h-5" alt="Twitch" />
             </div>
           </Card>
 
           <Card className="bg-white/10 rounded-2xl overflow-hidden">
-            <img src="https://i.pinimg.com/736x/af/1c/e3/af1ce3e03806db4731188e6ae8b2a0c5.jpg" alt="Trailer" className="w-full h-40 object-cover" />
+            <img src="/trailer.jpg" alt="Trailer" className="w-full h-40 object-cover" />
             <Button className="w-full flex justify-center py-2 bg-green-500 text-white">
               <Play className="mr-2 w-4 h-4" /> Play Trailer
             </Button>
@@ -85,3 +88,4 @@ export default function SamuraiQuest() {
     </div>
   );
 }
+
